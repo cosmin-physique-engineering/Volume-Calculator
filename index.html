@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <title>Calculator Volum Antrenament Săptămânal</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f6f8;
+            padding: 40px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+
+        .result {
+            margin-top: 25px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .value {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Calculator Volum Antrenament</h1>
+
+    <label>Nivel dezvoltare musculară</label>
+    <select id="nivel">
+        <option value="">-- Alege --</option>
+        <option value="1">Începător</option>
+        <option value="2">Intermediar</option>
+        <option value="3">Avansat</option>
+    </select>
+
+    <label>Sex</label>
+    <select id="sex">
+        <option value="">-- Alege --</option>
+        <option value="0">M</option>
+        <option value="1">F</option>
+    </select>
+
+    <label>Stil de viață</label>
+    <select id="stil">
+        <option value="">-- Alege --</option>
+        <option value="0.5">Stres: Cronic major, Somn: 4-5 ore pe noapte</option>
+        <option value="0.6">Stres: Extrem de ridicat, Somn: 5-6 ore pe noapte</option>
+        <option value="0.7">Stres: Foarte ridicat, Somn: 6 ore pe noapte</option>
+        <option value="0.8">Stres: Ridicat, Somn: 6-7 ore pe noapte</option>
+        <option value="0.9">Stres: Mediu, Somn: 7 ore pe noapte</option>
+        <option value="1.0">Stres: Redus, Somn: 7-8 ore pe noapte</option>
+        <option value="1.1">Stres: Extrem de redus, Somn: 8 ore pe noapte</option>
+        <option value="1.2">Stres: Inexistent, Somn: 8-9 ore pe noapte</option>
+    </select>
+
+    <label>Dietă</label>
+    <select id="dieta">
+        <option value="">-- Alege --</option>
+        <option value="0.8">DA</option>
+        <option value="1.0">NU</option>
+        <option value="1.1">În niciun caz!</option>
+    </select>
+
+    <label>Vârstă</label>
+    <select id="varsta"></select>
+
+    <label>Frecvență săptămânală</label>
+    <select id="frecventa"></select>
+
+    <div class="result" id="rezultat">
+        Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară:
+    </div>
+</div>
+
+<script>
+    const varstaSelect = document.getElementById("varsta");
+    const frecventaSelect = document.getElementById("frecventa");
+    const rezultatDiv = document.getElementById("rezultat");
+
+    // Populare vârstă 12–120
+    varstaSelect.innerHTML = '<option value="">-- Alege --</option>';
+    for (let i = 12; i <= 120; i++) {
+        varstaSelect.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+
+    // Populare frecvență 1–7
+    frecventaSelect.innerHTML = '<option value="">-- Alege --</option>';
+    for (let i = 1; i <= 7; i++) {
+        frecventaSelect.innerHTML += `<option value="${i}">${i}</option>`;
+    }
+
+    const inputs = document.querySelectorAll("select");
+    inputs.forEach(input => input.addEventListener("change", calculeaza));
+
+    function calculeaza() {
+        const B2 = document.getElementById("nivel").value;
+        if (!B2) return afiseazaEroare("Nu ai ales nicio valoare pentru Nivelul de Dezvoltare Musculară!");
+
+        const B3 = document.getElementById("sex").value;
+        if (!B3) return afiseazaEroare("Nu ai ales nicio valoare pentru Sex!");
+
+        const B4 = document.getElementById("stil").value;
+        if (!B4) return afiseazaEroare("Nu ai ales nicio valoare pentru Stil de Viață!");
+
+        const B5 = document.getElementById("dieta").value;
+        if (!B5) return afiseazaEroare("Nu ai ales nicio valoare pentru Dietă!");
+
+        const B6 = document.getElementById("varsta").value;
+        if (!B6) return afiseazaEroare("Nu ai ales nicio valoare pentru Vârstă!");
+
+        const B7 = document.getElementById("frecventa").value;
+        if (!B7) return afiseazaEroare("Nu ai ales nicio valoare pentru Frecvență săptămânală!");
+
+        const frecventaFactor = (B7 < 3) ? B7 : 2.5;
+
+        const rezultat =
+            ((frecventaFactor * 5) *
+            B4 *
+            B5 *
+            Math.sqrt(B2) *
+            (1 - ((Math.max(B6 - 50, 0)) / 10 * 0.12))) +
+            (B3 * 3);
+
+        rezultatDiv.innerHTML =
+            `Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară: 
+            <span class="value">${rezultat.toFixed(1)}</span>`;
+    }
+
+    function afiseazaEroare(text) {
+        rezultatDiv.innerHTML =
+            `Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară: 
+            <span class="error">${text}</span>`;
+    }
+</script>
+
+</body>
+</html>
