@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Calculator Volum Antrenament Săptămânal</title>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -11,7 +12,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 650px;
             margin: auto;
             background: #ffffff;
             padding: 25px;
@@ -36,18 +37,37 @@
             margin-top: 5px;
         }
 
-        .result {
-            margin-top: 25px;
-            font-size: 18px;
+        .result-row {
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .result-label {
+            flex: 1;
             font-weight: bold;
+            line-height: 1.4;
+        }
+
+        .result-box {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
+            border: 2px solid #ccc;
+            border-radius: 6px;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .result-value {
+            color: green;
         }
 
         .error {
             color: red;
-        }
-
-        .value {
-            color: #000;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -98,15 +118,21 @@
     <label>Frecvență săptămânală</label>
     <select id="frecventa"></select>
 
-    <div class="result" id="rezultat">
-        Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară:
+    <div class="result-row">
+        <div class="result-label">
+            Numărul de serii/seturi pe săptămână<br>
+            pentru fiecare grupă musculară
+        </div>
+        <div class="result-box" id="rezultat">
+            —
+        </div>
     </div>
 </div>
 
 <script>
     const varstaSelect = document.getElementById("varsta");
     const frecventaSelect = document.getElementById("frecventa");
-    const rezultatDiv = document.getElementById("rezultat");
+    const rezultatBox = document.getElementById("rezultat");
 
     // Populare vârstă 12–120
     varstaSelect.innerHTML = '<option value="">-- Alege --</option>';
@@ -125,22 +151,22 @@
 
     function calculeaza() {
         const B2 = document.getElementById("nivel").value;
-        if (!B2) return afiseazaEroare("Nu ai ales nicio valoare pentru Nivelul de Dezvoltare Musculară!");
+        if (!B2) return eroare("Nu ai ales nicio valoare pentru Nivelul de Dezvoltare Musculară!");
 
         const B3 = document.getElementById("sex").value;
-        if (!B3) return afiseazaEroare("Nu ai ales nicio valoare pentru Sex!");
+        if (!B3) return eroare("Nu ai ales nicio valoare pentru Sex!");
 
         const B4 = document.getElementById("stil").value;
-        if (!B4) return afiseazaEroare("Nu ai ales nicio valoare pentru Stil de Viață!");
+        if (!B4) return eroare("Nu ai ales nicio valoare pentru Stil de Viață!");
 
         const B5 = document.getElementById("dieta").value;
-        if (!B5) return afiseazaEroare("Nu ai ales nicio valoare pentru Dietă!");
+        if (!B5) return eroare("Nu ai ales nicio valoare pentru Dietă!");
 
         const B6 = document.getElementById("varsta").value;
-        if (!B6) return afiseazaEroare("Nu ai ales nicio valoare pentru Vârstă!");
+        if (!B6) return eroare("Nu ai ales nicio valoare pentru Vârstă!");
 
         const B7 = document.getElementById("frecventa").value;
-        if (!B7) return afiseazaEroare("Nu ai ales nicio valoare pentru Frecvență săptămânală!");
+        if (!B7) return eroare("Nu ai ales nicio valoare pentru Frecvență săptămânală!");
 
         const frecventaFactor = (B7 < 3) ? B7 : 2.5;
 
@@ -152,15 +178,14 @@
             (1 - ((Math.max(B6 - 50, 0)) / 10 * 0.12))) +
             (B3 * 3);
 
-        rezultatDiv.innerHTML =
-            `Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară: 
-            <span class="value">${rezultat.toFixed(1)}</span>`;
+        const rezultatRotunjit = Math.ceil(rezultat);
+
+        rezultatBox.innerHTML =
+            `<span class="result-value">${rezultatRotunjit}</span>`;
     }
 
-    function afiseazaEroare(text) {
-        rezultatDiv.innerHTML =
-            `Numărul de serii/seturi pe săptămână pentru fiecare grupă musculară: 
-            <span class="error">${text}</span>`;
+    function eroare(text) {
+        rezultatBox.innerHTML = `<span class="error">${text}</span>`;
     }
 </script>
 
